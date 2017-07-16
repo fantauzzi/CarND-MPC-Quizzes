@@ -49,13 +49,10 @@ int main() {
 
   auto coeff=polyfit(xvals, yvals, 3);
 
-  // TODO: use `polyfit` to fit a third order polynomial to the (x, y)
-  // coordinates.
-
   for (double x = 0; x <= 20; x += 1.0) {
 	  auto result = polyeval(coeff, x);
 	  std::cout << result << std::endl;
-    // TODO: use `polyeval` to evaluate the x values.
+
   }
 
   // Expected output

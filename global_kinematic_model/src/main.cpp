@@ -1,7 +1,7 @@
 // In this quiz you'll implement the global kinematic model.
 #include <math.h>
 #include <iostream>
-#include "Eigen-3.3/Eigen/Core"
+#include "Eigen/Core"
 
 //
 // Helper functions
@@ -20,6 +20,18 @@ const double Lf = 2;
 Eigen::VectorXd globalKinematic(Eigen::VectorXd state,
                                 Eigen::VectorXd actuators, double dt) {
   Eigen::VectorXd next_state(state.size());
+  auto x=state[0];
+  auto y=state[1];
+  auto psi=state[2];
+  auto v=state[3];
+  auto delta=actuators[0];
+  auto a=actuators[1];
+  x+=v*cos(psi)*dt;
+  y+=v*sin(psi)*dt;
+  psi+=v/Lf*delta*dt;
+  v+=a*dt;
+  next_state << x, y, psi, v;
+
   return next_state;
 }
 
