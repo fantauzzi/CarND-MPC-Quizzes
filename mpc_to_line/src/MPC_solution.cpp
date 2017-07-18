@@ -1,9 +1,10 @@
-#include "MPC.h"
+#include "MPC_solution.h"
+
 #include <math.h>
 #include <cppad/cppad.hpp>
 #include <cppad/ipopt/solve.hpp>
-#include "Eigen-3.3/Eigen/Core"
-#include "Eigen-3.3/Eigen/QR"
+#include "Eigen/Core"
+#include "Eigen/QR"
 #include "matplotlibcpp.h"
 
 namespace plt = matplotlibcpp;
@@ -198,7 +199,7 @@ vector<double> MPC::Solve(Eigen::VectorXd x0, Eigen::VectorXd coeffs) {
     vars_upperbound[i] = 0.436332;
   }
 
-  // Acceleration/decceleration upper and lower limits.
+  // Acceleration/deceleration upper and lower limits.
   // NOTE: Feel free to change this to something else.
   for (int i = a_start; i < n_vars; i++) {
     vars_lowerbound[i] = -1.0;
@@ -300,28 +301,28 @@ int main() {
   MPC mpc;
   int iters = 50;
 
-  Eigen::VectorXd ptsx(2);
-  Eigen::VectorXd ptsy(2);
+  Eigen::VectorXd ptsx(2); // Waypoints x coordinates
+  Eigen::VectorXd ptsy(2); // Waypopints y coordinates
   ptsx << -100, 100;
   ptsy << -1, -1;
 
   // The polynomial is fitted to a straight line so a polynomial with
   // order 1 is sufficient.
-  auto coeffs = polyfit(ptsx, ptsy, 1);
+  auto coeffs = polyfit(ptsx, ptsy, 1);  // Fit the waypoints with a straight line
 
   // NOTE: free feel to play around with these
-  double x = -1;
+  double x = -1;  // Current car state
   double y = 10;
   double psi = 0;
   double v = 10;
   // The cross track error is calculated by evaluating at polynomial at x, f(x)
   // and subtracting y.
-  double cte = polyeval(coeffs, x) - y;
+  double cte = polyeval(coeffs, x) - y;  // Approximation, but suitable
   // Due to the sign starting at 0, the orientation error is -f'(x).
   // derivative of coeffs[0] + coeffs[1] * x -> coeffs[1]
   double epsi = psi - atan(coeffs[1]);
 
-  Eigen::VectorXd state(6);
+  Eigen::VectorXd state(6);  // The current state vector
   state << x, y, psi, v, cte, epsi;
 
   std::vector<double> x_vals = {state[0]};
